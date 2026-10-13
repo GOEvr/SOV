@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Prévia — Sistema de Ocorrências Veiculares | BJMP</title>
+<style>
+:root{--primary:#1a365d;--primary-light:#2b6cb0;--danger:#c53030;--warning:#d69e2e;--success:#276749;--info:#2b6cb0;--bg:#f7fafc;--card:#fff;--text:#1a202c;--muted:#718096;--border:#e2e8f0;--radius:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+.header{background:var(--primary);color:#fff;padding:.7rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.logo{font-weight:700;font-size:1.1rem}
+.nav a{color:rgba(255,255,255,.9);text-decoration:none;font-size:.85rem;margin-right:.6rem}
+.user{font-size:.75rem;opacity:.9;margin-left:auto}
+.main{flex:1;padding:1rem;max-width:600px;margin:0 auto;width:100%}
+.footer{background:#edf2f7;padding:.5rem;font-size:.7rem;color:var(--muted);text-align:center}
+h1{font-size:1.25rem;margin-bottom:.3rem}
+.sub{color:var(--muted);font-size:.85rem;margin-bottom:1rem}
+.btn{display:inline-block;padding:.55rem 1.1rem;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-size:.9rem;cursor:pointer;text-decoration:none;text-align:center}
+.btn-block{display:block;width:100%}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+label{font-size:.8rem;font-weight:500;display:block;margin-bottom:.2rem}
+input,select,textarea{width:100%;padding:.5rem .7rem;border:1px solid var(--border);border-radius:var(--radius);font-size:.95rem;margin-bottom:.7rem;background:#fff}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.stat{background:var(--card);padding:.9rem;border-radius:var(--radius);box-shadow:0 1px 3px rgba(0,0,0,.08);text-align:center}
+.stat-v{font-size:1.5rem;font-weight:700;color:var(--primary)}
+.stat-l{font-size:.7rem;color:var(--muted)}
+.action{background:var(--card);padding:.9rem;border-radius:var(--radius);box-shadow:0 1px 3px rgba(0,0,0,.08);text-decoration:none;color:var(--text);display:block;margin-bottom:.6rem}
+.action h3{font-size:.95rem;color:var(--primary);margin-bottom:.15rem}
+.action p{font-size:.8rem;color:var(--muted)}
+.notice{background:#ebf8ff;border:1px solid #90cdf4;border-radius:var(--radius);padding:.8rem;font-size:.8rem;color:#2a4365;margin-top:1rem}
+.vehicle{background:var(--card);border-radius:var(--radius);box-shadow:0 1px 3px rgba(0,0,0,.08);padding:1rem;margin-bottom:1rem;border-left:4px solid var(--primary)}
+.vehicle h2{font-size:1.1rem;margin-bottom:.4rem}
+.vinfo{font-size:.8rem;color:var(--muted);margin-bottom:.6rem;line-height:1.5}
+.occ{border-radius:var(--radius);padding:.8rem;margin-bottom:.5rem;border-left:4px solid}
+.occ.danger{background:#fff5f5;border-left-color:var(--danger)}
+.occ.ok{background:#f0fff4;border-left-color:var(--success)}
+.occ.warn{background:#fffff0;border-left-color:var(--warning)}
+.occ-h{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.3rem;margin-bottom:.3rem}
+.occ-type{font-weight:600;font-size:.85rem}
+.badge{font-size:.7rem;background:#e2e8f0;padding:.1rem .4rem;border-radius:999px}
+.occ-alert{font-size:.8rem;font-style:italic;margin-bottom:.3rem}
+.occ-d{font-size:.75rem;color:var(--muted);margin-bottom:.3rem;line-height:1.4}
+.occ-desc{font-size:.8rem}
+.empty{background:#bee3f8;color:#2a4365;padding:1rem;border-radius:var(--radius);font-size:.9rem;line-height:1.5}
+/* Login */
+.login-page{background:linear-gradient(135deg,#1a365d,#2b6cb0);justify-content:center;align-items:center;padding:1rem}
+.login-card{background:#fff;border-radius:12px;padding:1.75rem;width:100%;max-width:380px;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.login-card h1{font-size:1.15rem;text-align:center;margin-bottom:.2rem}
+.login-card .sub{text-align:center}
+.demo-bar{background:#2d3748;color:#fff;padding:.4rem .8rem;font-size:.7rem;text-align:center}
+.demo-bar a{color:#90cdf4;margin:0 .3rem}
+.brand{text-align:center;font-size:.7rem;color:var(--muted);margin-top:.8rem}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#276749;color:#fff;padding:.6rem 1.2rem;border-radius:8px;font-size:.85rem;display:none;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.toast.show{display:block}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  PRÉVIA DEMO — 
+  <a href="#" onclick="go('login');return false">Login</a>
+  <a href="#" onclick="go('dashboard');return false">Painel</a>
+  <a href="#" onclick="go('consulta');return false">Consulta</a>
+  <a href="#" onclick="go('resultado');return false">Com registro</a>
+  <a href="#" onclick="go('sem');return false">Sem registro</a>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="screen login-page active">
+  <div class="login-card">
+    <h1>Sistema de Ocorrências Veiculares</h1>
+    <p class="sub">Acesso restrito a usuários autorizados</p>
+    <label>E-mail</label>
+    <input type="email" value="admin@demo.local" readonly>
+    <label>Senha</label>
+    <input type="password" value="Demo@2026" readonly>
+    <button class="btn btn-block" onclick="go('dashboard')">Entrar</button>
+    <p class="brand" style="margin-top:1rem">Uso interno · Ações registradas em auditoria</p>
+    <p class="brand">BJMP Soluções Digitais · www.bjmpsolucoes.com.br</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="screen">
+  <header class="header">
+    <span class="logo">SOV</span>
+    <nav class="nav">
+      <a href="#" onclick="go('dashboard');return false">Painel</a>
+      <a href="#" onclick="go('consulta');return false">Consulta</a>
+    </nav>
+    <span class="user">Admin Demo</span>
+  </header>
+  <main class="main">
+    <h1>Painel Operacional</h1>
+    <p class="sub">Bem-vindo, Administrador Demo.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-v">3</div><div class="stat-l">Veículos</div></div>
+      <div class="stat"><div class="stat-v">2</div><div class="stat-l">Ocorrências ativas</div></div>
+      <div class="stat"><div class="stat-v">1</div><div class="stat-l">Em apuração</div></div>
+      <div class="stat"><div class="stat-v">12</div><div class="stat-l">Consultas hoje</div></div>
+    </div>
+    <a class="action" href="#" onclick="go('consulta');return false">
+      <h3>Consulta Veicular</h3>
+      <p>Pesquisar por placa, chassi ou motor</p>
+    </a>
+    <a class="action" href="#" onclick="alert('Cadastro disponível na versão completa');return false">
+      <h3>Cadastrar Veículo</h3>
+      <p>Novo registro de veículo</p>
+    </a>
+    <div class="notice"><strong>Importante:</strong> Consultas limitadas à base interna. O resultado não comprova regularidade do veículo.</div>
+  </main>
+  <footer class="footer">BJMP Soluções Digitais · www.bjmpsolucoes.com.br · Nésio Augusto Ferreira</footer>
+</div>
+
+<!-- CONSULTA -->
+<div id="consulta" class="screen">
+  <header class="header">
+    <span class="logo">SOV</span>
+    <nav class="nav">
+      <a href="#" onclick="go('dashboard');return false">Painel</a>
+      <a href="#" onclick="go('consulta');return false">Consulta</a>
+    </nav>
+    <span class="user">Admin Demo</span>
+  </header>
+  <main class="main">
+    <h1>Consulta Veicular</h1>
+    <p class="sub">Pesquise por placa, chassi ou motor. Resultados da base interna.</p>
+    <label>Tipo</label>
+    <select id="tipo">
+      <option value="plate">Placa</option>
+      <option value="chassis">Chassi</option>
+      <option value="engine">Nº do Motor</option>
+    </select>
+    <label>Identificador</label>
+    <input type="text" id="ident" placeholder="Ex: ABC1D23" value="ABC1D23">
+    <button class="btn btn-block" onclick="consultar()">Consultar</button>
+    <div class="notice" style="margin-top:1rem">
+      <strong>Aviso:</strong> Ausência de registro <strong>não comprova</strong> regularidade do veículo.
+    </div>
+    <p class="sub" style="margin-top:1rem">Teste: <b>ABC1D23</b> (com registro) · <b>XXX0000</b> (sem registro)</p>
+  </main>
+  <footer class="footer">BJMP Soluções Digitais · www.bjmpsolucoes.com.br</footer>
+</div>
+
+<!-- RESULTADO COM REGISTRO -->
+<div id="resultado" class="screen">
+  <header class="header">
+    <span class="logo">SOV</span>
+    <nav class="nav">
+      <a href="#" onclick="go('dashboard');return false">Painel</a>
+      <a href="#" onclick="go('consulta');return false">Consulta</a>
+    </nav>
+    <span class="user">Admin Demo</span>
+  </header>
+  <main class="main">
+    <p style="font-size:.85rem;margin-bottom:.6rem"><a href="#" onclick="go('consulta');return false" style="color:var(--primary)">← Nova consulta</a></p>
+    <div class="vehicle">
+      <h2>Placa: ABC1D23</h2>
+      <div class="vinfo">
+        <strong>Marca/Modelo:</strong> Volkswagen Gol 1.0<br>
+        <strong>Cor:</strong> Prata · <strong>Chassi:</strong> 9BWZZZ377VT004251<br>
+        <strong>Motor:</strong> BKL987654
+      </div>
+      <h3 style="font-size:.95rem;margin:0.6rem 0 0.4rem">Ocorrências vinculadas (2)</h3>
+      <div class="occ danger">
+        <div class="occ-h"><span class="occ-type">Roubo ou Furto Registrado</span><span class="badge">Confirmado (documental)</span></div>
+        <p class="occ-alert">REGISTRO DE ROUBO/FURTO: foi encontrada ocorrência interna correspondente. Confira a situação e a data de atualização do registro.</p>
+        <div class="occ-d"><strong>Protocolo:</strong> OCC20261012A1B2C3D4<br><strong>Data:</strong> 15/09/2026 22:30 · Av. Paulista, 1000 / SP</div>
+        <p class="occ-desc">Registro interno de furto do veículo na região central.</p>
+      </div>
+      <div class="occ ok">
+        <div class="occ-h"><span class="occ-type">Veículo Recuperado</span><span class="badge">Encerrado</span></div>
+        <p class="occ-alert">VEÍCULO RECUPERADO: existe registro interno de recuperação. Verifique se há outras ocorrências vinculadas.</p>
+        <div class="occ-d"><strong>Protocolo:</strong> OCC20261012I9J0K1L2<br><strong>Data:</strong> 20/08/2026 10:00 · Pátio Municipal / SP</div>
+        <p class="occ-desc">Veículo recuperado e liberado ao proprietário.</p>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+        <h4 style="font-size:.9rem;margin-bottom:.4rem">Registrar Atendimento</h4>
+        <label>Resumo</label>
+        <textarea rows="2" placeholder="Descreva o atendimento..."></textarea>
+        <label>Providências</label>
+        <textarea rows="2" placeholder="Providências tomadas..."></textarea>
+        <button class="btn" onclick="toast('Atendimento registrado (demo)')">Registrar Atendimento</button>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">BJMP Soluções Digitais · www.bjmpsolucoes.com.br</footer>
+</div>
+
+<!-- SEM REGISTRO -->
+<div id="sem" class="screen">
+  <header class="header">
+    <span class="logo">SOV</span>
+    <nav class="nav">
+      <a href="#" onclick="go('dashboard');return false">Painel</a>
+      <a href="#" onclick="go('consulta');return false">Consulta</a>
+    </nav>
+  </header>
+  <main class="main">
+    <h1>Consulta: XXX0000</h1>
+    <div class="empty" style="margin:1rem 0">
+      <strong>Nenhum registro correspondente foi encontrado</strong> na base interna consultada.
+      <br><br>
+      Isso <strong>não comprova</strong> a regularidade do veículo nem substitui as consultas oficiais eventualmente necessárias.
+    </div>
+    <button class="btn" onclick="go('consulta')">Nova consulta</button>
+  </main>
+  <footer class="footer">BJMP Soluções Digitais · www.bjmpsolucoes.com.br · Nésio Augusto Ferreira</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function consultar(){
+  const v=(document.getElementById('ident').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(v==='ABC1D23'||v==='XYZ9K88'||v==='QWE4R56') go('resultado');
+  else go('sem');
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+</script>
+</body>
+</html>
